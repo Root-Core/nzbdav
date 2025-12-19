@@ -2,8 +2,8 @@
 
 public static class StringUtil
 {
-    public static string? EmptyToNull(string? value)
+    extension(string? str)
     {
-        return value == "" ? null : value;
+        public string? OrNull() => str == "" ? null : str;
     }
 }

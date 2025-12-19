@@ -4,7 +4,7 @@ public static class EnvironmentUtil
 {
     public static string GetVariable(string envVariable)
     {
-        return Environment.GetEnvironmentVariable(envVariable) ??
+        return Environment.GetEnvironmentVariable(envVariable).OrNull() ??
                throw new Exception($"The environment variable `{envVariable}` must be set.");
     }
 
