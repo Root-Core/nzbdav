@@ -2,9 +2,10 @@
 
 public static class EnvironmentUtil
 {
-    public static string GetVariable(string envVariable)
+    public static string GetVariable(string envVariable, string? fallback = null)
     {
         return Environment.GetEnvironmentVariable(envVariable).OrNull() ??
+               fallback ??
                throw new Exception($"The environment variable `{envVariable}` must be set.");
     }
 

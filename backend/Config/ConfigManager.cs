@@ -57,8 +57,7 @@ public class ConfigManager
     public string GetRcloneMountDir()
     {
         var mountDir = GetConfigValue("rclone.mount-dir")
-                       ?? EnvironmentUtil.GetVariable("MOUNT_DIR")
-                       ?? "/mnt/nzbdav";
+                       ?? EnvironmentUtil.GetVariable("MOUNT_DIR", "/mnt/nzbdav");
         if (mountDir.EndsWith('/')) mountDir = mountDir.TrimEnd('/');
         return mountDir;
     }
@@ -78,8 +77,7 @@ public class ConfigManager
     public string GetApiCategories()
     {
         return GetConfigValue("api.categories")
-               ?? EnvironmentUtil.GetVariable("CATEGORIES")
-               ?? "audio,software,tv,movies";
+               ?? EnvironmentUtil.GetVariable("CATEGORIES", "audio,software,tv,movies");
     }
 
     public string GetManualUploadCategory()
@@ -91,16 +89,15 @@ public class ConfigManager
     public string? GetWebdavUser()
     {
         return GetConfigValue("webdav.user")
-               ?? EnvironmentUtil.GetVariable("WEBDAV_USER")
-               ?? "admin";
+               ?? EnvironmentUtil.GetVariable("WEBDAV_USER", "admin");
     }
 
     public string? GetWebdavPasswordHash()
     {
         var hashedPass = GetConfigValue("webdav.pass");
         if (hashedPass != null) return hashedPass;
-        var pass = EnvironmentUtil.GetVariable("WEBDAV_PASSWORD");
-        if (pass != null) return PasswordUtil.Hash(pass);
+        var pass = EnvironmentUtil.GetVariable("WEBDAV_PASSWORD", "");
+        if (!pass.IsWhiteSpace()) return PasswordUtil.Hash(pass);
         return null;
     }
 
