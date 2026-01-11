@@ -111,8 +111,12 @@ public class QueueItemProcessor(
         var documentBytes = Encoding.UTF8.GetBytes(queueNzbContents.NzbContents);
         using var stream = new MemoryStream(documentBytes);
         var nzb = await NzbDocument.LoadAsync(stream).ConfigureAwait(false);
-        var archivePassword = nzb.MetaData.GetValueOrDefault("password")?.FirstOrDefault();
         var nzbFiles = nzb.Files.Where(x => x.Segments.Count > 0).ToList();
+
+        // Look for a password in filename and nzb document
+        // The file name's password takes priority, as an easy override
+        var archivePassword = FilenameUtil.GetNzbPassword(queueItem.FileName) ??
+            nzb.MetaData.GetValueOrDefault("password")?.FirstOrDefault();
 
         // step 0 -- perform article existence pre-check against cache
         // https://github.com/nzbdav-dev/nzbdav/issues/101
@@ -319,7 +323,6 @@ public class QueueItemProcessor(
             Id = queueItem.Id,
             CreatedAt = DateTime.Now,
             FileName = queueItem.FileName,
-            JobName = queueItem.JobName,
             Category = queueItem.Category,
             DownloadStatus = errorMessage == null
                 ? HistoryItem.DownloadStatusOption.Completed
