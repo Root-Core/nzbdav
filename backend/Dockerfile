@@ -1,5 +1,5 @@
 # Build the project
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /nzb-webdav
 COPY ./ ./
 RUN dotnet restore
